@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">BadHabbits</string>
+    <string name="subtitle">days without bad habits</string>
+    <string name="reset">RESET</string>
+</resources>
