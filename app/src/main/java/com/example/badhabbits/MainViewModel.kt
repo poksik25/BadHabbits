@@ -1,12 +1,6 @@
 package com.example.badhabbits
 
-import android.view.View
-import android.widget.Button
-import android.widget.TextView
-import androidx.activity.result.ActivityResultRegistryOwner
 import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 
 class MainViewModel(
@@ -23,7 +17,10 @@ class MainViewModel(
                     UiState.NDays(days)
             communication.put(value)
         }
-
+    }
+    fun reset() {
+        repository.reset()
+        communication.put(UiState.ZeroDays)
     }
 
     override fun observe(owner: LifecycleOwner, observer: Observer<UiState>) {
@@ -31,53 +28,5 @@ class MainViewModel(
     }
 }
 
-sealed class UiState {
-    abstract fun apply(daysTextView: TextView, resetBtn: Button)
 
-    object ZeroDays : UiState() {
-        override fun apply(daysTextView: TextView, resetBtn: Button) {
-            daysTextView.text = "0"
-            resetBtn.visibility = View.GONE
-        }
 
-    }
-
-    data class NDays(private val days: Int) : UiState() {
-        override fun apply(daysTextView: TextView, resetBtn: Button) {
-            daysTextView.text = days.toString()
-            resetBtn.visibility = View.GONE
-        }
-
-    }
-}
-
-interface MainCommunication {
-    interface Put {
-        fun put(value: UiState)
-    }
-
-    interface Observe {
-        fun observe(owner: LifecycleOwner, observer: Observer<UiState>)
-    }
-
-    interface Mutable : Put, Observe {
-
-    }
-
-    class Base(
-        private val liveData: MutableLiveData<UiState>
-    ) : Mutable {
-        override fun put(value: UiState) {
-            liveData.value = value
-        }
-
-        override fun observe(owner: LifecycleOwner, observer: Observer<UiState>) {
-            liveData.observe(owner, observer)
-        }
-    }
-
-}
-
-interface MainRepository {
-    fun days(): Int
-}
