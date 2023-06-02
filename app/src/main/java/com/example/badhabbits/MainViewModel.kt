@@ -1,5 +1,8 @@
 package com.example.badhabbits
 
+import android.view.View
+import android.widget.Button
+import android.widget.TextView
 import androidx.activity.result.ActivityResultRegistryOwner
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
@@ -29,11 +32,21 @@ class MainViewModel(
 }
 
 sealed class UiState {
+    abstract fun apply(daysTextView: TextView, resetBtn: Button)
+
     object ZeroDays : UiState() {
+        override fun apply(daysTextView: TextView, resetBtn: Button) {
+            daysTextView.text = "0"
+            resetBtn.visibility = View.GONE
+        }
 
     }
 
     data class NDays(private val days: Int) : UiState() {
+        override fun apply(daysTextView: TextView, resetBtn: Button) {
+            daysTextView.text = days.toString()
+            resetBtn.visibility = View.GONE
+        }
 
     }
 }
