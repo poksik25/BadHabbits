@@ -1,5 +1,7 @@
 package com.example.badhabbits
 
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.Observer
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
@@ -38,7 +40,7 @@ private class FakeRepository(private val days: Int) : MainRepository {
     }
 }
 
-interface FakeMainCommunication : MainCommunication.Put {
+private interface FakeMainCommunication : MainCommunication.Mutable {
     fun isSame(uiState: UiState): Boolean
     fun checkCalledCount(count: Int): Boolean
 
@@ -54,9 +56,13 @@ interface FakeMainCommunication : MainCommunication.Put {
             return count == callCount
         }
 
-        override fun putValue(value: UiState) {
+        override fun put(value: UiState) {
             callCount++
             state = value
+        }
+
+        override fun observe(owner: LifecycleOwner, observer: Observer<UiState>) {
+            TODO()
         }
     }
 }
